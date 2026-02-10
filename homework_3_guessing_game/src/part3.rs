@@ -56,7 +56,7 @@ mod bad_strategy_tests {
     fn the_max() {
         let min = 0;
         let max = 100;
-        let number = min;
+        let number = max - 1;
 
         // We create a simulated player
         let mut player = Player::new(SimulatedPlayer::new(number));

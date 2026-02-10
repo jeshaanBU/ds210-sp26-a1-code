@@ -1,5 +1,6 @@
 use crate::part1::Part1;
 use crate::part2::Part2;
+use crate::part3::SimulatedPlayer;
 use crate::player::Player;
 use crate::strategies::{Strategy, RandomStrategy};
 
@@ -9,11 +10,10 @@ use plotters::style::full_palette::ORANGE;
 mod part1;
 mod part2;
 mod part3;
-mod part4;
 mod player;
 mod strategies;
 
-// The experiment uses Part1 and Part2.
+// The experiment uses Part1, Part2, and Random.
 enum StrategyEnum {
     Part1,
     Part2,
@@ -36,6 +36,22 @@ impl StrategyEnum {
     }
 }
 
+fn experiment(strategy: StrategyEnum, min: u32, max: u32) -> u32 {
+    let options = [min, max-1, (min + max) / 2, (min + max) / 2 + (min + max) / 3];
+    let mut max_steps = 0;
+
+    for number in options {
+        let player = Player::new(SimulatedPlayer::new(number));
+        let steps = strategy.guess_the_number(player, min, max);
+        if steps > max_steps {
+            max_steps = steps;
+        }
+    }
+
+    return max_steps;
+}
+
+
 // Experiment main loop.
 fn main() {
     let mut random = Vec::new();
@@ -43,9 +59,9 @@ fn main() {
     let mut part2 = Vec::new();
 
     for max in 1..=100 {
-        let steps_random = part4::experiment(StrategyEnum::Random, 0, max);
-        let steps1 = part4::experiment(StrategyEnum::Part1, 0, max);
-        let steps2 = part4::experiment(StrategyEnum::Part2, 0, max);
+        let steps_random = experiment(StrategyEnum::Random, 0, max);
+        let steps1 = experiment(StrategyEnum::Part1, 0, max);
+        let steps2 = experiment(StrategyEnum::Part2, 0, max);
         random.push((max as f32, steps_random as f32));
         part1.push((max as f32, steps1 as f32));
         part2.push((max as f32, steps2 as f32));
