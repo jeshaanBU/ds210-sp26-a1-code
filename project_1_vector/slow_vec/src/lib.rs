@@ -60,14 +60,22 @@ impl<T> SlowVec<T> {
 
     // Student 1: Provide your solution here.
     pub fn push(&mut self, t: T) {
-        todo!("Student 1 should implement this");
+        let old_len = self.len();
+        let mut tmp = FixedSizeArray::allocate(old_len + 1);
+        for i in 0..old_len {
+            let v = self.fixed.move_out(i);
+            tmp.put(v, i);
+        }
+        tmp.put(t, old_len);
+        self.fixed = tmp;
+}
     }
 
-    // Student 2: Provide your solution here
-    pub fn remove(&mut self, i: usize) {
+    // // Student 2: Provide your solution here
+     pub fn remove(&mut self, i: usize) {
         todo!("Student 2 should implement this");
-    }
-}
+     }
+
 
 
 // This allows us to print the SlowVec using println!().
