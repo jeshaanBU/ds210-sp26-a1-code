@@ -31,7 +31,7 @@ impl<T> SlowVec<T> {
         for i in 0..self.fixed.len() {
             v.push(self.fixed.move_out(i));
         }
-        v
+        			v
     }
 
     // Transforms a vector to a SlowVec.
@@ -68,15 +68,12 @@ impl<T> SlowVec<T> {
         }
         tmp.put(t, old_len);
         self.fixed = tmp;
-}
     }
 
-<<<<<<< HEAD
+
     // Student 2: Provide your solution here
     pub fn remove(&mut self, i: usize) -> T {
-        if i >= self.len() {
-            panic!("Index out of bounds");
-        }
+        assert!(i < self.len(), "Index out of bounds");
 
         let old_len = self.len();
         let mut new_fixed = FixedSizeArray::allocate(old_len - 1);
@@ -93,17 +90,11 @@ impl<T> SlowVec<T> {
                 j += 1;
             }
         }
+
         self.fixed = new_fixed;
         removed.unwrap()
     }
 }
-=======
-    // // Student 2: Provide your solution here
-     pub fn remove(&mut self, i: usize) {
-        todo!("Student 2 should implement this");
-     }
-
->>>>>>> origin/std1
 
 
 // This allows us to print the SlowVec using println!().
