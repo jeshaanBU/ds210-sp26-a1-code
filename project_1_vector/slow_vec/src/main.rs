@@ -60,20 +60,20 @@ fn slow_vec_push() {
 }
 
 // Student 2: This part should work if you implement the remove function correctly!
-fn slow_vec_remove() {
+ fn slow_vec_remove() {
     println!("slow_vec_remove------");
-    let mut slow_vec3: SlowVec<i32> = SlowVec::from_vec(vec![10, 20, 30, 40]);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 20, 30, 40])
-    slow_vec3.remove(1);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 30, 40])
+     let mut slow_vec3: SlowVec<i32> = SlowVec::from_vec(vec![10, 20, 30, 40]);
+     println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 20, 30, 40])
+     slow_vec3.remove(1);
+     println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 30, 40])
     slow_vec3.remove(2);
     println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 30])
     slow_vec3.remove(0);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[30])
-    slow_vec3.remove(0);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[])
+     println!("{}", slow_vec3);  // should print SlowVec(Fixed[30])
+     slow_vec3.remove(0);
+     println!("{}", slow_vec3);  // should print SlowVec(Fixed[])
     println!("---------------------");
-    println!("");
+     println!("");
 }
 
 fn main() {
