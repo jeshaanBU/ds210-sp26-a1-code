@@ -17,5 +17,17 @@ impl ChatbotV1 {
             .chat()
             .with_system_prompt("The assistant will act like a pirate");
         return chat_session.add_message(message).await.unwrap().to_string();
+
+        // You need to add your code here
+        // You must find a way to add the given message to the chat_session!
+        // consider https://docs.rs/kalosm/0.4.0/kalosm/language/struct.Chat.html#method.add_message
+        // Hint: make sure you transform/extract the response message as a **String**.
+
+        let output = chat_session.add_message(message).await;
+
+        match output {
+            Ok(response) => response,
+            Err(_) => String::from("Sorry, I could not generate a response."),
+        }
     }
 }
