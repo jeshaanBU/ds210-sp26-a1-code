@@ -1,0 +1,5 @@
+Q1: Part 2 is by far the best solution. As number of guesses increases, random begins to take 100 steps to get ot the answer increasingly and almost plateaus there when it gets to 40. Part 1 is simply a for loop O(n) so it is of course increasing in a linear fashion as it just goes through the numbers 1-100 in order. Part 2 is the best because it is a glorified binary search so it takes significantly less steps than the other 2. 
+
+Q2: There is no variability with part 1. max = 110 means it would take 110 steps to get there and max = 120 means it would take 120 steps. It can be defined by the function f(n) = n.
+
+Q3: The increases happen when max passes powers of 2, because each additional binary-search question doubles how many numbers can be distinguished. When the range becomes just larger than what the current number of questions can handle, one more question is required. For values up to 100, this happens around 2, 4, 8, 16, 32, and 64.
