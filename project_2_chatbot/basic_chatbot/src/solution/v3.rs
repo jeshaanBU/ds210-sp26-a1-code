@@ -1,15 +1,8 @@
-use std::collections::HashMap;
-
 use kalosm::language::*;
+use std::collections::HashMap;
 
 #[allow(dead_code)]
 pub struct ChatbotV3 {
-    // What should you store inside your Chatbot type?
-    // The model? The chat_session?
-    // Storing a single chat session is not enough: it mixes messages from different users
-    // together!
-    // Need to store one chat session per user.
-    // Think of some kind of data structure that can help you with this.
     model: Llama,
     sessions: HashMap<String, Chat<Llama>>,
 }
@@ -18,6 +11,7 @@ impl ChatbotV3 {
     #[allow(dead_code)]
     pub fn new(model: Llama) -> ChatbotV3 {
         return ChatbotV3 {
+
             // Make sure you initialize your struct members here
             model: model,
             sessions: HashMap::new(),
@@ -30,13 +24,16 @@ impl ChatbotV3 {
         // Notice, you are given both the `message` and also the `username`.
         // Use this information to select the correct chat session for that user and keep it
         // separated from the sessions of other users.
+        // If this is the first time we see this user, we need to create a new chat session for them
+        // If this is the first message from this user, create a new chat session for them
         if !self.sessions.contains_key(&username) {
-            // If this is the first time we see this user, we need to create a new chat session for them
-            let chat_session = self.model
+            let chat_session = self
+                .model
                 .chat()
                 .with_system_prompt("The assistant will act like a pirate");
             self.sessions.insert(username.clone(), chat_session);
         }
+
 
         let chat_session = self.sessions.get_mut(&username).unwrap();
         let output = chat_session.add_message(message).await;
@@ -45,6 +42,11 @@ impl ChatbotV3 {
             Ok(response) => response,
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
+
+        // Retrieve the existing session for this user and add the message
+        let session = self.sessions.get_mut(&username).unwrap();
+        return session.add_message(message).await.unwrap().to_string();
+
     }
 
     #[allow(dead_code)]
@@ -55,8 +57,13 @@ impl ChatbotV3 {
         // to then retrieve the history!
         match self.sessions.get(&username) {
             Some(chat_session) => {
-                Vec::new()
-            },
+                let history = chat_session.session().history();
+
+                history
+                    .into_iter()
+                    .map(|msg| msg.to_string())
+                    .collect()
+            }
             None => Vec::new(), // If there is no chat session for this user, return an empty history
         }
     }
