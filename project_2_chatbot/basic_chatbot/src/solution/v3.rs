@@ -42,11 +42,6 @@ impl ChatbotV3 {
             Ok(response) => response,
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
-
-        // Retrieve the existing session for this user and add the message
-        let session = self.sessions.get_mut(&username).unwrap();
-        return session.add_message(message).await.unwrap().to_string();
-
     }
 
     #[allow(dead_code)]
@@ -57,11 +52,11 @@ impl ChatbotV3 {
         // to then retrieve the history!
         match self.sessions.get(&username) {
             Some(chat_session) => {
-                let history = chat_session.session().history();
+                let history = chat_session.session().unwrap().history();
 
                 history
                     .into_iter()
-                    .map(|msg| msg.to_string())
+                    .map(|msg| msg.content().to_string())
                     .collect()
             }
             None => Vec::new(), // If there is no chat session for this user, return an empty history
