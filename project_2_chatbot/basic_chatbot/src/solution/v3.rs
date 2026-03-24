@@ -1,6 +1,5 @@
-use std::hash::Hash;
-
 use kalosm::language::*;
+use std::collections::HashMap;
 
 #[allow(dead_code)]
 pub struct ChatbotV3 {

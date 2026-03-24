@@ -25,7 +25,7 @@ impl ChatbotV1 {
         let output = chat_session.add_message(message).await;
 
         match output {
-            Ok(response) => response,
+            Ok(response) => response.to_string(),
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
     }
