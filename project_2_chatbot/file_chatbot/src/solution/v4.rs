@@ -36,7 +36,8 @@ impl ChatbotV4 {
             },
             Some(session) => {
                 // TODO: what should happen here?
-                return Vec::new();
+                let history = session.history();
+                return history.iter().map(|message| format!("{:?}", message)).collect();
             }
         }
     }
