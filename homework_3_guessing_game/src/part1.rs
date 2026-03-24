@@ -13,5 +13,12 @@ impl Strategy for Part1 {
             }
         }
         return max;
+        for guess in min..max {
+            if player.ask_if_equal(guess) {
+                return guess;
+            }
+        }
+        return min;
+    }    
 }
 }
