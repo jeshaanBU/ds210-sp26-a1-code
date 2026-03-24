@@ -39,7 +39,7 @@ impl ChatbotV3 {
         let output = chat_session.add_message(message).await;
         
         match output {
-            Ok(response) => response,
+            Ok(response) => response.to_string(),
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
     }
@@ -52,12 +52,15 @@ impl ChatbotV3 {
         // to then retrieve the history!
         match self.sessions.get(&username) {
             Some(chat_session) => {
-                let history = chat_session.session().unwrap().history();
+                let history = chat_session
+                    .session()
+                    .expect("session should exist")
+                    .history();
 
-                history
-                    .into_iter()
-                    .map(|msg| msg.content().to_string())
-                    .collect()
+                    history
+                        .iter()
+                        .map(|message| message.to_string())
+                        .collect()
             }
             None => Vec::new(), // If there is no chat session for this user, return an empty history
         }

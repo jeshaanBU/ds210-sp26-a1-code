@@ -4,7 +4,6 @@ use kalosm::language::*;
 pub struct ChatbotV2 {
     // What should you store inside your Chatbot type?
     // The model? The chat_session?
-    model: Llama,
     chat_session: Chat<Llama>,
 }
 
@@ -18,7 +17,6 @@ impl ChatbotV2 {
         return ChatbotV2 {
             // Whatever you decide to store in the struct
             // you need to make sure you pass here!
-            model: model,
             chat_session: chat_session,
         };
     }
@@ -29,7 +27,7 @@ impl ChatbotV2 {
         let output = self.chat_session.add_message(message).await;
 
         match output {
-            Ok(response) => response,
+            Ok(response) => response.to_string(),
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
     }
