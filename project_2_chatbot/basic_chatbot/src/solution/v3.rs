@@ -59,7 +59,7 @@ impl ChatbotV3 {
 
                     history
                         .iter()
-                        .map(|message| message.to_string())
+                        .map(|message| format!("{:?}", message))
                         .collect()
             }
             None => Vec::new(), // If there is no chat session for this user, return an empty history
