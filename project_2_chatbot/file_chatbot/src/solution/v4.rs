@@ -67,13 +67,17 @@ impl ChatbotV4 {
     
         match file_library::load_chat_session_from_file(&filename) {
             None => Vec::new(),
+            // will extract history
             Some(session) => {
                 let history = session.history();
     
                 history
                     .iter()
+                    // skip the first message in history, which is likely the system prompt, so the returned history only includes the actual conversation content the user cares about.
                     .skip(1)
                     .map(|message| {
+                        // The history messages were not directly in plain String form
+                        // this code formats each message into text, extracts the content portion, and cleans up escaped characters like \n, \", and \\ so the final history is readable.
                         let text = format!("{:?}", message);
                         if let Some(start) = text.find("content: \"") {
                             let rest = &text[start + 10..];
