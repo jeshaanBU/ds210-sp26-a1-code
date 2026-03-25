@@ -19,12 +19,11 @@ impl ChatbotV4 {
             .chat()
             .with_system_prompt("The assistant will act like a pirate");
 
-        // TODO: You have to implement the rest:
-        // You need to load the chat session from the file using file_library::load_chat_session_from_file(...).
-        // Think about what needs to happen if the function returns None vs Some(session).
-        // Hint: look at https://docs.rs/kalosm/latest/kalosm/language/struct.Chat.html#method.with_session
+        // Try to load a saved session from file for this user.
+        // If Some(session) comes back, restore it so the bot remembers past messages.
+        // If None comes back (first time chatting), just keep the fresh session we made above.
 
-        if let Some(session) = file_library::load_chat_session_from_file(filename) {
+        if let Some(session) = file_library::load_chat_session_from_file(&filename) {
             chat_session = self.model
                 .chat()
                 .with_system_prompt("The assistant will act like a pirate")
@@ -45,7 +44,6 @@ impl ChatbotV4 {
             }
             Err(_) => String::from("Sorry, I could not generate a response."),
         }
-
     }
 
     pub fn get_history(&self, username: String) -> Vec<String> {

@@ -105,8 +105,8 @@ impl ChatbotV5 {
                                 text
                             })
                             .collect()
-                    }
-                }
+                // Not in cache, so load the session from file instead
+                // If there's no file either, return empty history
             }
             Some(chat_session) => {
                 println!("get_history: {username} is in the cache! Nice!");
@@ -133,6 +133,7 @@ impl ChatbotV5 {
                         text
                     })
                     .collect()
+                // Already in cache, just read the history from the chat session directly
             }
         }
     }
