@@ -50,16 +50,31 @@ impl ChatbotV4 {
 
     pub fn get_history(&self, username: String) -> Vec<String> {
         let filename = &format!("{}.txt", username);
-
+    
         match file_library::load_chat_session_from_file(&filename) {
-            None => {
-                return Vec::new();
-            },
+            None => Vec::new(),
             Some(session) => {
-                // TODO: what should happen here?
                 let history = session.history();
-                return history.iter().map(|message| format!("{:?}", message)).collect();
+    
+                history
+                    .iter()
+                    .skip(1)
+                    .map(|message| {
+                        let text = format!("{:?}", message);
+                        if let Some(start) = text.find("content: \"") {
+                            let rest = &text[start + 10..];
+                            if let Some(end) = rest.rfind('"') {
+                                return rest[..end]
+                                    .replace("\\n", "\n")
+                                    .replace("\\\"", "\"")
+                                    .replace("\\\\", "\\");
+                            }
+                        }
+                        text
+                    })
+                    .collect()
             }
         }
     }
+    
 }
