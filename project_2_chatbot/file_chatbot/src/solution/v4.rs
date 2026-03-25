@@ -24,7 +24,28 @@ impl ChatbotV4 {
         // Think about what needs to happen if the function returns None vs Some(session).
         // Hint: look at https://docs.rs/kalosm/latest/kalosm/language/struct.Chat.html#method.with_session
 
-        return String::from("Hello, I am not a bot (yet)!");
+        if let Some(session) = file_library::load_chat_session_from_file(filename) {
+            chat_session = self.model
+                .chat()
+                .with_system_prompt("The assistant will act like a pirate")
+                .with_session(session);
+        }
+
+        let output = chat_session
+            .add_message(message)
+            .await;
+
+        match output {
+            Ok(response) => {
+                let session = chat_session
+                    .session()
+                    .expect("session should exist");
+                file_library::save_chat_session_to_file(&filename, &session);
+                response.to_string()
+            }
+            Err(_) => String::from("Sorry, I could not generate a response."),
+        }
+
     }
 
     pub fn get_history(&self, username: String) -> Vec<String> {
