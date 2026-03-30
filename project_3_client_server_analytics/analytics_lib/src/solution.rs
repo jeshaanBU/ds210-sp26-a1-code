@@ -2,12 +2,45 @@ use std::collections::HashMap;
 use crate::dataset::{ColumnType, Dataset, Value, Row};
 use crate::query::{Aggregation, Condition, Query};
 
+fn row_matches(row: &Row, dataset: &Dataset, condition: &Condition) -> bool {
+    match condition {
+        Condition::Equal(col_name, expected_value) => {
+            let idx = dataset.column_index(col_name);
+            row.get_value(idx) == expected_value
+        }
+        Condition::Not(inner) => !row_matches(row, dataset, inner),
+        Condition::And(left, right) => {
+            row_matches(row, dataset, left) && row_matches(row, dataset, right)
+        }
+        Condition::Or(left, right) => {
+            row_matches(row, dataset, left) || row_matches(row, dataset, right)
+        }
+    }
+}
+
 pub fn filter_dataset(dataset: &Dataset, filter: &Condition) -> Dataset {
-    todo!("Implement this!");
+    let mut result = Dataset::new(dataset.columns().clone());
+    for row in dataset.iter() {
+        if row_matches(row, dataset, filter) {
+            result.add_row(row.clone());
+        }
+    }
+    result
 }
 
 pub fn group_by_dataset(dataset: Dataset, group_by_column: &String) -> HashMap<Value, Dataset> {
-    todo!("Implement this!");
+    let col_idx = dataset.column_index(group_by_column);
+    let columns = dataset.columns().clone();
+    let mut groups: HashMap<Value, Dataset> = HashMap::new();
+
+    for row in dataset.into_iter() {
+        let key = row.get_value(col_idx).clone();
+        groups
+            .entry(key)
+            .or_insert_with(|| Dataset::new(columns.clone()))
+            .add_row(row);
+    }
+    groups
 }
 
 pub fn aggregate_dataset(dataset: HashMap<Value, Dataset>, aggregation: &Aggregation) -> HashMap<Value, Value> {
