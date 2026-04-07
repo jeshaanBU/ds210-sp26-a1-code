@@ -44,7 +44,52 @@ pub fn group_by_dataset(dataset: Dataset, group_by_column: &String) -> HashMap<V
 }
 
 pub fn aggregate_dataset(dataset: HashMap<Value, Dataset>, aggregation: &Aggregation) -> HashMap<Value, Value> {
-    todo!("Implement this!");
+    let mut result: HashMap<Value, Value> = HashMap::new();
+
+    for (group_value, grouped_dataset) in dataset {
+        let aggregated_value = match aggregation {
+            Aggregation::Count(_column_name) => {
+                Value::Integer(grouped_dataset.len() as i32)
+            }
+
+            Aggregation::Sum(column_name) => {
+                let col_idx = grouped_dataset.column_index(column_name);
+                let mut sum = 0;
+
+                for row in grouped_dataset.iter() {
+                    match row.get_value(col_idx) {
+                        Value::Integer(n) => {
+                            sum += *n;
+                        }
+                        _ => panic!("Sum can only be used on integer columns"),
+                    }
+                }
+
+                Value::Integer(sum)
+            }
+
+            Aggregation::Average(column_name) => {
+                let col_idx = grouped_dataset.column_index(column_name);
+                let mut sum = 0;
+
+                for row in grouped_dataset.iter() {
+                    match row.get_value(col_idx) {
+                        Value::Integer(n) => {
+                            sum += *n;
+                        }
+                        _ => panic!("Average can only be used on integer columns"),
+                    }
+                }
+
+                let avg = sum / grouped_dataset.len() as i32;
+                Value::Integer(avg)
+            }
+        };
+
+        result.insert(group_value, aggregated_value);
+    }
+
+    result
 }
 
 pub fn compute_query_on_dataset(dataset: &Dataset, query: &Query) -> Dataset {
