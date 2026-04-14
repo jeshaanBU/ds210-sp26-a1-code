@@ -18,8 +18,26 @@ impl Agent for SolutionAgent {
         };
 
         for m in moves {
-            todo!()
+            board.apply_move(m, player);
+            let (score, _, _) = SolutionAgent::solve(board, player.flip());
+            board.undo_move(m, player);
+
+            match player {
+                Player::X => {
+                    if score > best_score {
+                        best_score = score;
+                        best_move = m;
+                    }
+                }
+                Player::O => {
+                    if score < best_score {
+                        best_score = score;
+                        best_move = m;
+                    }
+                }
+            }
         }
+        
 
         (best_score, best_move.0, best_move.1)
     }
