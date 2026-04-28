@@ -1,0 +1,23 @@
+[package]
+name = "module_16_concurrency_parallelism"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "basic"
+path = "src/basic.rs"
+
+
+[[bin]]
+name = "basic2"
+path = "src/basic2.rs"
+
+[[bin]]
+name = "race"
+path = "src/race.rs"
+
+[[bin]]
+name = "mutex"
+path = "src/mutex.rs"
+
+[dependencies]
